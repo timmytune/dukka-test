@@ -66,7 +66,7 @@ class JourneyList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gener
         serializer.save(user=self.request.user)
     
     def get(self, request, *args, **kwargs):
-        if request.query_params and request.query_params['current_user']: 
+        if request.query_params and 'current_user' in request.query_params: 
             try:
                 serializer_context = {
                     'request': request,
@@ -83,7 +83,10 @@ class JourneyList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gener
             return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        try:
+            return self.create(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
 
 
 
@@ -103,13 +106,23 @@ class JourneyDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.D
     
     
     def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+        try:
+            return self.retrieve(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
+
 
     def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        try:
+            return self.update(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
 
     def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+        try:
+            return self.delete(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
 
 
 
@@ -122,10 +135,13 @@ class MovementList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gene
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-    
+        if self.request.data and 'journey_id' in self.request.data:
+            serializer.save(user=self.request.user, journey_id = self.request.data['journey_id'])
+        else:
+            serializer.save(user=self.request.user)
+
     def get(self, request, *args, **kwargs):
-        if request.query_params and request.query_params['current_user']: 
+        if request.query_params and 'current_user' in request.query_params: 
             try:
                 serializer_context = {
                     'request': request,
@@ -142,8 +158,10 @@ class MovementList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Gene
             return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
-
+        try:
+            return self.create(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
 
 
 class MovementDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
@@ -156,18 +174,25 @@ class MovementDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.
 
     def perform_update(self, serializer):
         return serializer.save(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
     
     def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+        try:
+            return self.retrieve(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
 
     def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        try:
+            return self.update(request, *args, **kwargs)
+        except Exception as e: 
+            print(e)
+            return exceptions.bad_request(request, e)
 
     def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+        try:
+            return self.delete(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
 
 
 
@@ -186,7 +211,7 @@ class PointList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
             return exceptions.bad_request(self.request, e)
     
     def get(self, request, *args, **kwargs):
-        if request.query_params and request.query_params['current_user']: 
+        if request.query_params and 'current_user' in request.query_params: 
             try:
                 serializer_context = {
                     'request': request,
@@ -203,7 +228,10 @@ class PointList(mixins.ListModelMixin, mixins.CreateModelMixin, generics.Generic
             return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        try:
+            return self.create(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
 
 
 
@@ -217,16 +245,23 @@ class PointDetail(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.Des
 
     def perform_update(self, serializer):
         return serializer.save(user=self.request.user)
-
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
     
     def get(self, request, *args, **kwargs):
-        return self.retrieve(request, *args, **kwargs)
+        try:
+            return self.retrieve(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
+
 
     def put(self, request, *args, **kwargs):
-        return self.update(request, *args, **kwargs)
+        try:
+            return self.update(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
 
     def delete(self, request, *args, **kwargs):
-        return self.destroy(request, *args, **kwargs)
+        try:
+            return self.destroy(request, *args, **kwargs)
+        except Exception as e: 
+            return exceptions.bad_request(request, e)
 

@@ -32,7 +32,7 @@ class Point(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     movement = models.ForeignKey(Movement, on_delete=models.CASCADE)
 
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField()
     lon = models.FloatField(blank=False)
     lat = models.FloatField(blank=False)
 
