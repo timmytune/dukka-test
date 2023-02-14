@@ -1,10 +1,10 @@
 # DUKKA Location tracker app test
 
-In this repository is the implementation of the teacker app and backend. Take note though could be better with more time and is only intended to show the specific functions requested -:)
+In this repository is the implementation of the tracker app and backend. Take note though this could be better with more time and is only intended to show the specific functions requested -:)
 
 ## Backend
 
-The backend is a django service that uses rest framework. There are customs three models in additionon to the ones from django
+The backend is a django service that uses rest framework. There are three new models in additionon to the ones from django
 
 1. Point: This stands for a single point the user has been to at a specific time
 2. Movement: This stands for a collection of points that shows the movewment of the user from one place to another
@@ -27,4 +27,4 @@ You can test the API with postman collection https://documenter.getpostman.com/v
 
 ## Frontend
 
-Tracking a users movement requires they have a device they can movve with so the only frontend that can be used for that is Flutter. The frontend tracks the user's movement from a background process and periodically uploads the co-ordiates as points to the backend. Also the frontend is responsible for tracking which movement in the backend to add the points to. To run the code, run the frontend folder in andoid studio or vs code. The App authomatically comnects to http://44.211.16.5:8000 so you can test the usage.
+Tracking a users movement requires they have a device they can move with so the only frontend that can be used for that is Flutter. The frontend tracks the user's movement from a background process and periodically uploads the co-ordiates as points to the backend. Also the frontend is responsible for tracking which movement in the backend to add the points to. To run the code, run the frontend folder in andoid studio or vs code. The App authomatically comnects to http://44.211.16.5:8000 that currently hosts the app so you can test.
