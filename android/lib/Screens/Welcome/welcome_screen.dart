@@ -14,6 +14,7 @@ class WelcomeScreen extends StatefulWidget {
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
+//Welcome sceem model
 class _WelcomeScreenState extends State<WelcomeScreen> {
   _WelcomeScreenState() {
     helpers.storageHelperGet('auth', 'token').then((token) => {
@@ -70,6 +71,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 }
 
+//Welcome sceem model mobile
 class MobileWelcomeScreen extends StatelessWidget {
   const MobileWelcomeScreen({
     Key? key,

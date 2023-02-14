@@ -21,11 +21,9 @@ from tracker.views import CurrentUser, JourneyDetail, JourneyList, MovementList,
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 
-# router = routers.DefaultRouter()
-# router.register(r'journey', Journey)
 
 # Wire up our API using automatic URL routing.
-# Additionally, we include login URLs for the browsable API.
+# Additionally, we include login URLs for the browsable API amd register.
 urlpatterns = [
     path('super/', admin.site.urls),
     path('api/v1/user', CurrentUser.as_view(), name='user'),

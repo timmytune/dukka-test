@@ -4,9 +4,11 @@ import 'package:hive_flutter/adapters.dart';
 import '/Screens/Welcome/welcome_screen.dart';
 import '/constants.dart';
 
+//main function
 void main() async {
+  //Initiate hive
   await hive.Hive.initFlutter();
-
+  //run app
   runApp(const MyApp());
 }
 

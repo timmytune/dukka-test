@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:hive/hive.dart';
 import 'package:geolocator/geolocator.dart';
 
+// helper function to get current position and requst for the permission if not already given
 Future<Position> determinePosition() async {
   bool serviceEnabled;
   LocationPermission permission;
@@ -41,6 +42,7 @@ Future<Position> determinePosition() async {
   return await Geolocator.getCurrentPosition();
 }
 
+// Helper function to determine posution in the background without asking for permission
 Future<Position> determinePositionWorker() async {
   bool serviceEnabled;
   LocationPermission permission;
@@ -70,47 +72,59 @@ Future<Position> determinePositionWorker() async {
   return await Geolocator.getCurrentPosition();
 }
 
+//Helper functio to send Http request with authorization
 Future<dynamic> httpHelper(String method, String uri, Map<String, Object> body,
     Map<String, dynamic>? params, Map<String, String>? headers) async {
   try {
-    final url = Uri.http('44.211.16.5:8000', uri, params);
+    //Generate URL, Should not be hardcoded in production
+    var url = Uri.http('44.211.16.5:8000', uri);
+    if (params != null && params.isNotEmpty) {
+      url = Uri.http('44.211.16.5:8000', uri, params);
+    }
 
+    // create http request
     var req = http.Request(method, url);
 
+    //get token
     var val = await storageHelperGet('auth', 'token');
 
+    // add authorization if available
     if (val != null) {
       req.headers["Authorization"] = 'Bearer $val';
     }
 
+    //add body if not empty
     if (body.isNotEmpty) {
       req.headers['Content-Type'] = 'application/json';
       req.body = convert.jsonEncode(body);
     }
 
+    // add header if not empty
     if (headers != null && headers.isNotEmpty) {
       req.headers.addAll(headers);
     }
 
+    //send request
     final response = await req.send();
 
+    //check response code
     if (response.statusCode < 300) {
+      // convert response btyte to string
       var data = await response.stream.bytesToString();
+      //decode response to json
       return convert.jsonDecode(data);
-    } else {
-      var data = await response.stream.bytesToString();
-      var ret = convert.jsonDecode(data);
+    }
 
-      if (ret != null) {
-        ret = ret as Map<String, dynamic>;
-        ret["statusCode"] = response.statusCode;
-        return ret;
-      } else {
-        return {
-          'message': 'invalid response',
-          'statusCode': response.statusCode
-        };
-      }
+    var data = await response.stream.bytesToString();
+    var ret = convert.jsonDecode(data);
+
+    // check if response is null create response and add status code
+    if (ret != null) {
+      ret = ret as Map<String, dynamic>;
+      ret["statusCode"] = response.statusCode;
+      return ret;
+    } else {
+      return {'message': 'invalid response', 'statusCode': response.statusCode};
     }
   } catch (e) {
     print(e.toString());
@@ -153,21 +167,25 @@ Future<String> httpHelperRawResult(
   }
 }
 
+//Get data from DB
 Future<dynamic> storageHelperGet(String box, String key) async {
   var b = await Hive.openBox(box);
   return await b.get(key);
 }
 
+//Delete data from DB
 Future<dynamic> storageHelperDelete(String box, Object key) async {
   var b = await Hive.openBox(box);
   return await b.delete(key);
 }
 
+//put data in DB
 Future<dynamic> storageHelperSet(String box, String key, dynamic val) async {
   var b = await Hive.openBox(box);
   return await b.put(key, val);
 }
 
+//Store data with autho increment key
 Future<int> storageHelperSetNoKey(String box, dynamic val) async {
   var b = await Hive.openBox(box);
   return await b.add(val);

@@ -17,13 +17,17 @@ class TrackerScreen extends StatefulWidget {
 
 class _TrackerScreenState extends State<TrackerScreen> {
   _TrackerScreenState() {
+    //Check for current position and ask for permission
     helpers.determinePosition().then((pos) {
+      // get currnwt time
       var time = DateTime.now();
 
+      // if postion has a valid timestamp use it as time
       if (pos.timestamp != null) {
         time = pos.timestamp as DateTime;
       }
 
+      //save position in DB
       helpers.storageHelperSetNoKey('positions', {
         'lon': pos.longitude,
         'lat': pos.latitude,
@@ -31,39 +35,49 @@ class _TrackerScreenState extends State<TrackerScreen> {
         'isPushed': false
       });
 
+      //Initialize background worker
       Workmanager()
           .initialize(workers.callbackDispatcher, isInDebugMode: true)
           .then((value) async {
+        //Cancel previous works this should not be donr in producction
         await Workmanager().cancelAll();
 
+        //Register worker six
         await Workmanager().registerPeriodicTask(
             workers.simpleTaskKeySix, workers.simpleTaskKeySix);
 
+        //Register worker one
         await Workmanager().registerPeriodicTask(
             workers.simpleTaskKeyOne, workers.simpleTaskKeyOne);
 
+        //Register worker two with 3 minutes delay
         await Workmanager().registerPeriodicTask(
             workers.simpleTaskKeyTwo, workers.simpleTaskKeyTwo,
             initialDelay: Duration(minutes: 3));
 
+        //Register worker three with 6 minutes delay
         await Workmanager().registerPeriodicTask(
             workers.simpleTaskKeyThree, workers.simpleTaskKeyThree,
             initialDelay: Duration(minutes: 6));
 
+        //Register worker four with 9 minutes delay
         await Workmanager().registerPeriodicTask(
             workers.simpleTaskKeyFour, workers.simpleTaskKeyFour,
             initialDelay: Duration(minutes: 9));
 
+        //Register worker five with 12 minutes delay
         await Workmanager().registerPeriodicTask(
             workers.simpleTaskKeyFive, workers.simpleTaskKeyFive,
             initialDelay: Duration(minutes: 12));
       });
     }).catchError((error) {
+      //ideally this should be a better logger
       print("GOT HERE TRACK");
       print(error);
     });
   }
 
+  //hold all points from server
   var points = [];
 
   @override
@@ -94,6 +108,7 @@ class _TrackerScreenState extends State<TrackerScreen> {
   }
 }
 
+//mobile view for page
 class MobileTrackerScreen extends StatefulWidget {
   const MobileTrackerScreen({
     Key? key,

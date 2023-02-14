@@ -3,7 +3,9 @@ from rest_framework import serializers
 from rest_framework_simplejwt.tokens import RefreshToken
 from tracker.models import Journey, Movement, Point
 
-
+'''
+    Seriializer that works with the Django User Model
+'''
 class UserSerializer(serializers.ModelSerializer):
     #journeys = serializers.PrimaryKeyRelatedField(many=True, queryset=Journey.objects.all())
     class Meta:
@@ -11,6 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [ 'id', 'password', 'username', 'email', 'groups']
         #extra_kwargs = {'password': {'write_only': True}}
 
+    # Returns user token
     def get_tokens(self, user):
         tokens = RefreshToken.for_user(user)
         refresh = str(tokens)
@@ -21,6 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
         }
         return data
 
+    # Creates new User
     def create(self, validated_data):
         user = User(email=validated_data['email'], username = validated_data['username'])
         print(validated_data)
@@ -28,13 +32,19 @@ class UserSerializer(serializers.ModelSerializer):
         user.save()    
         return user
 
+
+'''
+    Seriializer that works with the Django Group Model
+'''
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ['id', 'name']
 
 
-
+'''
+    Seriializer that works with User journey
+'''
 class JourneySerializer(serializers.ModelSerializer):
 
     user = serializers.ReadOnlyField(source='user.id')
@@ -43,7 +53,9 @@ class JourneySerializer(serializers.ModelSerializer):
         model = Journey
         fields = [ 'id', 'name', 'description', 'created', 'ended_at', 'user']
 
-
+'''
+    Seriializer that works with User Movement
+'''
 class MovementSerializer(serializers.ModelSerializer):
 
     user = serializers.ReadOnlyField(source='user.id')
@@ -53,6 +65,9 @@ class MovementSerializer(serializers.ModelSerializer):
         model = Movement
         fields = [ 'id', 'created', 'ended_at', 'user', 'journey']
 
+'''
+    Seriializer that works with the Django point location
+'''
 
 class PointSerializer(serializers.ModelSerializer):
 

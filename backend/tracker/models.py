@@ -2,7 +2,9 @@ from django.db import models
 #from django.contrib.gis.db import models as models2
 from django.contrib.auth.models import User
 
-
+'''
+    Journey model:  responsible for storing user journies as a collection of movements
+'''
 class Journey(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -15,6 +17,9 @@ class Journey(models.Model):
     class Meta:
         ordering = ['created']
 
+'''
+    Movement Model: responsible for storing the individual movements of a user as a collections of points
+'''
 
 class Movement(models.Model):
 
@@ -26,6 +31,11 @@ class Movement(models.Model):
 
     class Meta:
         ordering = ['created']
+
+'''
+    Point Model: this stores the individual locations of a user in longtitude and latitude with the time the user was there
+
+'''
 
 class Point(models.Model):
 
